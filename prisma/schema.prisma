@@ -11,28 +11,39 @@ datasource db {
 }
 
 model Settings {
-  key String @unique
+  key   String @unique
   value String
 }
 
 enum ServiceType {
-  Docker
-  HTTP
+  docker
+  http
 }
 
 model Service {
-  id Int @id @default(autoincrement())
-  name String
-  slug String
-  type ServiceType
-  url String
+  slug     String      @id @unique
+  name     String
+  type     ServiceType
+  url      String
+  status   Boolean     @default(false)
   lastSeen DateTime
+
+  Uptime Uptime[]
+}
+
+model Uptime {
+  id          Int     @id @default(autoincrement())
+  service     Service @relation(fields: [serviceSlug], references: [slug])
+  serviceSlug String
+
+  createdAt DateTime @default(now())
+  status    Boolean  @default(false)
 }
 
 model Version {
-  id Int @id
-  number String
-  link String
+  id          Int      @id
+  number      String
+  link        String
   releaseLink String
-  buildDate DateTime
+  buildDate   DateTime
 }
