@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Settings {
+  key String @unique
+  value String
+}
+
+enum ServiceType {
+  Docker
+  HTTP
+}
+
+model Service {
+  id Int @id @default(autoincrement())
+  name String
+  slug String
+  type ServiceType
+  url String
+  lastSeen DateTime
+}
+
+model Version {
+  id Int @id
+  number String
+  link String
+  releaseLink String
+  buildDate DateTime
+}
