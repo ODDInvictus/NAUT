@@ -11,3 +11,5 @@ Deze tool is gemaakt om het onderhouden van [ibs3](https://github.com/ODDInvictu
 ```console
 npm run dev
 ```
+
+Voor styling gebruik ik PicoCSS v2. Documentatie is [hier](https://v2.picocss.com/docs) te vinden
