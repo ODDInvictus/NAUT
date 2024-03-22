@@ -1,29 +1,30 @@
-import { DEV } from '$env/static/private';
+
 import { db } from '$lib/server/db';
-import { getAllApplications } from '$lib/server/status';
+import { getSetting } from '$lib/server/settings';
+import { createSession, parseHeaders } from '$lib/server/user';
+import { loadFlash } from 'sveltekit-flash-message/server';
 import type { LayoutServerLoad } from './$types';
 
-function parseHeaders(headers: Headers) {
-  const groupsString = headers.get('x-authentik-groups')
+export const load = loadFlash(async (event) => {
+  const headers = parseHeaders(event.request.headers);
 
-  const groups = groupsString?.split('|')
+  event.locals = headers
 
-  const isAdmin = DEV === 'true'
+  // get cookie
+  const session = createSession(event, headers);
+
 
   return {
-    username: headers.get('x-authentik-username'),
-    name: headers.get('x-authentik-name'),
-    email: headers.get('x-authentik-email'),
-    groups,
-    isDev: groups?.includes('bakkentrekkers'),
-    isAdmin: isAdmin || groups?.includes('ibs-admins')
-  }
-}
-
-export const load = (async (event) => {
-  return {
-    applications: await getAllApplications(),
-    user: parseHeaders(event.request.headers),
-    version: await db.version.findFirst({ where: { id: 1 } })
+    user: headers,
+    version: await getSetting('VERSION'),
+    radioLink: await getSetting('RADIO_LINK'),
+    radioLocalLink: await getSetting('RADIO_LOCAL_LINK'),
+    playlists: await db.playlist.findMany({
+      orderBy: {
+        lastPlayed: 'desc'
+      },
+      // Pick the first 5
+      take: 5
+    })
   };
 }) satisfies LayoutServerLoad;

@@ -1,0 +1,9 @@
+scheduler:
+  song_title:
+    filename: ./title
+
+news:
+  show_id: 2EaVmyxrGQv0au2jjHki5v
+
+database:
+  connection_string: root:123@tcp(localhost:3306)/radio

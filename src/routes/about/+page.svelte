@@ -6,16 +6,16 @@
 </script>
 
 <div class="container">
-  <Title title="Over N.A.U.T" />
+  <Title title="Over Invictus Radio" />
 
   <div class="inner">
-    <p>Niels' Automagische Update Tool is gebeund om IBS eindelijk eens te voorzien van fatsoenlijke CI/CD</p>
+    <p>Invictus Radio is <e>de</e> herrie zender van Enschede!</p>
 
     <h2>Huidige instantie</h2>
 
     {#if data.version}
-      <div>Versie: {data.version?.number}</div>
-      <div>Gebouwd op: {data.version?.buildDate.toLocaleString('nl')}</div>
+      <div>Versie: {data.version} ({data.gitSha})</div>
+      <div>Gebouwd op: {data.buildDate?.toLocaleString()}</div>
     {:else}
       <div>Versie data missend</div>
     {/if}
@@ -23,20 +23,19 @@
     <h2>Huidige gebruiker</h2>
     <div>ID: {data.user.username}</div>
     <div>Email: {data.user.email}</div>
-    <div>Admin-rechten? {data.user.isAdmin}</div>
-    <div>Developer-rechten? {data.user.isDev}</div>
+    <div>Admin-rechten: {data.user.isAdmin}</div>
     <div>Groepen: {data.user.groups?.join(', ')}</div>
 
     <h2>Links</h2>
 
-    <a href={data.version?.link}>GitHub</a>
-    <br />
-    <a href={data.version?.releaseLink}>Huidige release</a>
+    <a href={data.githubLink}>GitHub</a>
   </div>
 </div>
 
 <style lang="sass">
   .inner
+    padding-left: 1rem
+    padding-right: 1rem
     height: 100%
     width: 100%
 </style>

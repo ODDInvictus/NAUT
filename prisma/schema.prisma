@@ -10,40 +10,56 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  username String    @id @unique
+  name     String
+  email    String
+  groups   String
+  isDev    String
+  isAdmin  String
+  cookie   String
+  Session  Session[]
+}
+
+model Session {
+  id        String   @id @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [username])
+  expires   DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Settings {
   key   String @unique
   value String
 }
 
-enum ServiceType {
-  docker
-  http
+model Playlist {
+  id                 String           @id @unique
+  name               String
+  lastPlayed         DateTime         @default(now())
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  isCurrentlyPlaying Boolean          @default(false)
+  SongInPlaylist     SongInPlaylist[]
 }
 
-model Service {
-  slug     String      @id @unique
-  name     String
-  type     ServiceType
-  url      String
-  status   Boolean     @default(false)
-  lastSeen DateTime
+model SongInPlaylist {
+  playlistId String
+  playlist   Playlist @relation(fields: [playlistId], references: [id])
+  songId     String
+  song       Song     @relation(fields: [songId], references: [id])
 
-  Uptime Uptime[]
+  @@id([playlistId, songId])
 }
 
-model Uptime {
-  id          Int     @id @default(autoincrement())
-  service     Service @relation(fields: [serviceSlug], references: [slug])
-  serviceSlug String
-
-  createdAt DateTime @default(now())
-  status    Boolean  @default(false)
-}
-
-model Version {
-  id          Int      @id
-  number      String
-  link        String
-  releaseLink String
-  buildDate   DateTime
+model Song {
+  id             String           @id @unique
+  title          String
+  artists        String
+  album          String
+  cover          String?
+  duration       Int
+  SongInPlaylist SongInPlaylist[]
 }

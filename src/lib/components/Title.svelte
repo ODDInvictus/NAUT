@@ -6,9 +6,9 @@
 
 <svelte:head>
   {#if showTitle}
-    <title>{title} - N.A.U.T</title>
+    <title>{title} - Invictus Radio</title>
   {:else}
-    <title>N.A.U.T</title>
+    <title>Invictus Radio</title>
   {/if}
 </svelte:head>
 
