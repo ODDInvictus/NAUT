@@ -15,11 +15,11 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/nierot/invictus-radio/global_state"
 	spotifyauth "github.com/zmb3/spotify/v2/auth"
 	"golang.org/x/oauth2"
+	"github.com/spf13/viper"
 
 	"github.com/zmb3/spotify/v2"
 )
@@ -31,7 +31,6 @@ const redirectURI = "http://localhost:8080/callback"
 
 
 var (
-	err   = godotenv.Load()
 	auth  = spotifyauth.New(
 		spotifyauth.WithRedirectURL(redirectURI), 
 		spotifyauth.WithScopes(
@@ -56,6 +55,16 @@ func Init(e *echo.Echo) *spotify.Client {
 	e.GET("/callback", completeAuth)
 
 	globalState := global_state.GetGlobalState()
+
+	// TODO add client_id
+	clientId := viper.GetString("spotify.client_id")
+	clientSecret := viper.GetString("spotify.client_secret")
+
+	if clientId == "" || clientSecret == "" {
+		panic("spotify.client_id or spotify.client_secret not set in config")
+	}
+
+	log.Printf("spotify: %s %s\n", clientId, clientSecret)
 
 	url := auth.AuthURL(state)
 	log.Println("Please log in to Spotify by visiting the following page in your browser:", url)

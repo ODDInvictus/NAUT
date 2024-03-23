@@ -5,7 +5,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/nierot/invictus-radio/global_state"
@@ -28,18 +27,12 @@ var Queue *scheduler.Queue
 func main() {
 	log.Println("Starting Invictus Radio...")
 
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Println("failed loading .env")
-		panic(err)
-	}
-
 	viper.SetConfigName("config.yaml")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("/etc/invictus-radio/")
 	viper.AddConfigPath("$HOME/.invictus-radio")
 	viper.AddConfigPath(".")
-	err = viper.ReadInConfig()
+	err := viper.ReadInConfig()
 	if err != nil {
 		fmt.Println("failed reading config")
 		panic(err)
